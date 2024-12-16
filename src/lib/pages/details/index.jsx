@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router";
 import { fetchMovieById } from "../../api";
+import { Box, Grid2, Typography } from "@mui/material";
 
 const Details = () => {
 	const { id } = useParams();
@@ -15,20 +16,27 @@ const Details = () => {
 		getMovie(id);
 	}, [id]);
 
-	console.log(movie);
 	return (
-		<div>
+		<>
 			{movie && (
-				<div className="md:flex justify-between gap-5 w-full max-lg:p-10">
-					<img src={movie.Poster} className="max-md:w-full" alt={movie.Title} />
-					<div className="w-full md:max-w-[650px] max-md:mt-10">
-						<div>
-							<span className="text-2xl md:text-lg font-medium">
+				<Grid2
+					container
+					className="flex max-lg:flex-col max-lg:justify-center items-center justify-between w-full"
+					columnSpacing={10}
+				>
+					<Grid2>
+						<img src={movie.Poster} alt={movie.Title} loading="lazy" />
+					</Grid2>
+					<Grid2 className="max-lg:mt-5">
+						<Box className="max-w-[600px]">
+							<Typography variant="h5">
 								{movie.Title} {`(${movie.Type} ${movie.Year})`}
-							</span>
-							<p className="text-gray-600 text-sm">{movie.Rated}</p>
-							<p>{movie.Plot}</p>
-						</div>
+							</Typography>
+							<Typography variant="subtitle2">{movie.Rated}</Typography>
+							<Typography className="w-fit" variant="body1">
+								{movie.Plot}
+							</Typography>
+						</Box>
 						<div className="grid gap-4 mt-5">
 							<div className="text-lg">{`About ${movie.Type}`}</div>
 							<div className="grid gap-4 w-full max-sm:text-sm">
@@ -62,10 +70,10 @@ const Details = () => {
 								</div>
 							</div>
 						</div>
-					</div>
-				</div>
+					</Grid2>
+				</Grid2>
 			)}
-		</div>
+		</>
 	);
 };
 

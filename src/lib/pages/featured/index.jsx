@@ -1,11 +1,24 @@
-import { HeartFilledIcon, HeartIcon } from "@radix-ui/react-icons";
 import { useEffect, useState } from "react";
 import { Link, useLocation } from "react-router";
+
+import {
+	Grid2,
+	Card,
+	CardActions,
+	CardContent,
+	CardMedia,
+	Button,
+	Typography,
+	IconButton,
+} from "@mui/material";
+import { Favorite, FavoriteBorder } from "@mui/icons-material";
 
 const Featured = () => {
 	const location = useLocation();
 	const queryParams = new URLSearchParams(location.search);
 	const initialSearchTitle = queryParams.get("title") || "";
+	const initialSearchType = queryParams.get("type") || "";
+	const initialSearchYear = queryParams.get("year") || "";
 
 	const [featured, setFeatured] = useState([]);
 
@@ -28,47 +41,55 @@ const Featured = () => {
 
 	return (
 		<div>
-			<h1 className="text-xl px-3 sm:px-10">Featured Movies</h1>
-			<div className="flex flex-wrap justify-center lg:justify-start gap-5 mt-5">
+			<Typography variant="h5">Featured Movies</Typography>
+
+			<Grid2
+				container
+				spacing={{ xs: 2, md: 3 }}
+				columns={{ xs: 2, sm: 8, md: 12 }}
+				mt={5}
+			>
 				{featured.map((movie) => (
-					<div
-						className="rounded-lg border bg-white overflow-hidden shadow-sm"
+					<Grid2
 						key={movie.imdbID}
+						bgcolor={"bisque"}
+						className="h-[600px] md:ah-[550px] lg:h-[700px]"
+						size={{ xs: 2, sm: 4, md: 4 }}
 					>
-						<div className="px-0 pt-0 pb-2">
-							<img
-								src={movie.Poster}
-								className="md:w-[315px]"
-								alt={movie.Title}
+						<Card className="flex flex-col w-full h-full">
+							<CardMedia
+								image={movie.Poster}
+								className="flex-grow"
+								title={movie.Title}
 							/>
-							<div className="px-4 pt-2">
-								<div className="text-lg">{movie.Title}</div>
-								<div className="flex items-center justify-between w-full">
-									<Link
-										className="px-4 py-1.5 border rounded-md"
-										to={`/details/${movie.imdbID}/?title=${initialSearchTitle}`}
-									>
-										View Details
-									</Link>
-									<button
-										className="p-4"
-										type="button"
-										onClick={() => removeFeaturedMovie(movie)}
-									>
-										{!featured.some(
-											(featuredMovie) => featuredMovie.imdbID === movie.imdbID,
-										) ? (
-											<HeartIcon color="gray" className="scale-150" />
-										) : (
-											<HeartFilledIcon color="red" className="scale-150" />
-										)}
-									</button>
-								</div>
-							</div>
-						</div>
-					</div>
+							<CardContent>
+								<Typography gutterBottom variant="h6" component="div">
+									{movie.Title}{" "}
+									<span className="text-sm text-gray-500">({movie.Year})</span>
+								</Typography>
+							</CardContent>
+							<CardActions>
+								<IconButton onClick={() => removeFeaturedMovie(movie)}>
+									{!featured.some(
+										(featuredMovie) => featuredMovie.imdbID === movie.imdbID,
+									) ? (
+										<FavoriteBorder />
+									) : (
+										<Favorite color="error" />
+									)}
+								</IconButton>
+								<Button
+									LinkComponent={Link}
+									to={`/details/${movie.imdbID}/?title=${initialSearchTitle}&type=${initialSearchType}&year=${initialSearchYear}`}
+									size="small"
+								>
+									Learn More
+								</Button>
+							</CardActions>
+						</Card>
+					</Grid2>
 				))}
-			</div>
+			</Grid2>
 		</div>
 	);
 };
